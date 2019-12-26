@@ -16,9 +16,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ClassUtils;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PreDestroy;
+import java.lang.reflect.Constructor;
 import java.net.InetSocketAddress;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -35,6 +37,10 @@ import java.util.concurrent.TimeUnit;
 public class ElasticsearchUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(ElasticsearchUtil.class);
+
+    private static final boolean isOldVersionElasticSearch =
+            ClassUtils.isPresent("org.elasticsearch.common.transport.InetSocketTransportAddress",
+                    ElasticsearchUtil.class.getClassLoader());
 
     // key为集群名，value为对应的客户端连接
     private static Map<String, TransportClient> clientMap = new HashMap<>();
@@ -57,8 +63,19 @@ public class ElasticsearchUtil {
                 String[] ipPort = ipPortStr.split(":");
                 String ip = ipPort[0];
                 int port = Integer.parseInt(ipPort[1]);
-                TransportAddress transportAddress = new TransportAddress((new InetSocketAddress(ip, port)));
-                client.addTransportAddress(transportAddress);
+                Class inetSocketTransportAddressClass;
+                try {
+                    if (isOldVersionElasticSearch) {
+                        inetSocketTransportAddressClass = Class.forName("org.elasticsearch.common.transport.InetSocketTransportAddress");
+                    } else {
+                        inetSocketTransportAddressClass = Class.forName("org.elasticsearch.common.transport.TransportAddress");
+                    }
+                    Constructor constructor = inetSocketTransportAddressClass.getConstructor(InetSocketAddress.class);
+                    TransportAddress transportAddress = (TransportAddress) constructor.newInstance(new InetSocketAddress(ip, port));
+                    client.addTransportAddress(transportAddress);
+                } catch (Throwable e) {
+                    logger.error("initial es client come across a error, current ipPortStr is " + ipPortStr + ", message is " + e);
+                }
             }
             clientMap.put(clusterName, client);
         }

@@ -9,7 +9,7 @@ spring:
 data:
   elasticsearch:
     clusterAndIpList:
-      dev_es: 10.151.160.246:9300,10.151.160.247:9300,10.151.160.248:9300
+      dev_es: 10.121.180.246:9300,10.121.180.247:9300,10.121.180.248:9300
 server:
   port: 8182
   servlet:
@@ -21,7 +21,7 @@ spring:
 data:
   elasticsearch:
     clusterAndIpList:
-      prod_es: 10.151.160.246:9300,10.151.160.247:9300,10.151.160.248:9300
+      prod_es: 10.121.180.246:9300,10.121.180.247:9300,10.121.180.248:9300
 server:
   port: 8182
   servlet:
