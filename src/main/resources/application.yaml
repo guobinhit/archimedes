@@ -1,0 +1,28 @@
+spring:
+  profiles:
+    active: dev
+
+---
+
+spring:
+  profiles: dev
+data:
+  elasticsearch:
+    clusterAndIpList:
+      dev_es: 10.151.160.246:9300,10.151.160.247:9300,10.151.160.248:9300
+server:
+  port: 8182
+  servlet:
+    context-path: /archimedes
+---
+
+spring:
+  profiles: prod
+data:
+  elasticsearch:
+    clusterAndIpList:
+      prod_es: 10.151.160.246:9300,10.151.160.247:9300,10.151.160.248:9300
+server:
+  port: 8182
+  servlet:
+    context-path: /archimedes
