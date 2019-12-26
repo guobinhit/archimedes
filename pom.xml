@@ -20,7 +20,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
-        <akka.version>2.5.9</akka.version>
+        <akka.version>2.5.16</akka.version>
         <jackson.version>2.10.0.pr1</jackson.version>
         <!-- 生产环境 es 版本 -->
         <!--        <elasticsearch.version>5.4.1</elasticsearch.version>-->
