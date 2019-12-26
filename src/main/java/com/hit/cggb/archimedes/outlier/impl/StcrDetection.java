@@ -47,7 +47,7 @@ public class StcrDetection implements OutlierDetection {
             }
         }
 
-        detectionResult.setTimeSeriesMapList(timeSeriesMapList);
+        detectionResult.setDataMapList(timeSeriesMapList);
         detectionResult.setOutlierIndexList(outlierIndexList);
         return detectionResult;
     }

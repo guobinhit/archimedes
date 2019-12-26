@@ -6,7 +6,6 @@ import com.hit.cggb.archimedes.entity.OutlierDetectionResult;
 import com.hit.cggb.archimedes.enumtype.OutlierDetectionTypeEnum;
 import com.hit.cggb.archimedes.outlier.OutlierDetection;
 import com.hit.cggb.archimedes.outlier.impl.*;
-import com.hit.cggb.archimedes.util.ElasticsearchUtil;
 import com.hit.cggb.archimedes.util.SortHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,19 +18,14 @@ import java.util.Map;
 public class OutlierDetectionService {
     private static Logger logger = LoggerFactory.getLogger(OutlierDetectionService.class);
 
-    private final ElasticsearchUtil elasticsearchUtil;
-
-    public OutlierDetectionService(ElasticsearchUtil elasticsearchUtil) {
-        this.elasticsearchUtil = elasticsearchUtil;
-    }
-
     public OutlierDetectionResult outlierDetect(OutlierDetectionParam detectionParam) {
         logger.info("outlier detection query param is " + detectionParam.toString());
         OutlierDetectionResult detectionResult = new OutlierDetectionResult();
         // 获取目标时间序列
-        List<Map<String, Object>> timeSeriesMapList = elasticsearchUtil.getTimeSeriesFromEsIndex(detectionParam);
+//        List<Map<String, Object>> timeSeriesMapList = elasticsearchUtil.getTimeSeriesFromEsIndex(detectionParam);
         // 按时间从早到晚排序
-        List<Map<String, Object>> ascTimeSeriesMapList = new SortHelper<>().sortListByMapDate(timeSeriesMapList);
+//        List<Map<String, Object>> ascTimeSeriesMapList = new SortHelper<>().sortListByMapDate(timeSeriesMapList);
+        List<Map<String, Object>> ascTimeSeriesMapList = null;
         // 对数据集进行校验，并根据算法类型实例化异常点探测类
         if (ascTimeSeriesMapList != null && ascTimeSeriesMapList.size() > 0) {
             // 获取异常点探测实例

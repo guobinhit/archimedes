@@ -4,7 +4,7 @@ package com.hit.cggb.archimedes.enumtype;
  * @author Charies Gavin
  * @github https:github.com/guobinhit
  * @date 2019/12/26,下午3:10
- * @description
+ * @description 异常点探测算法枚举
  */
 public enum OutlierDetectionTypeEnum {
     QUARTILE("quartile", "四分位"),

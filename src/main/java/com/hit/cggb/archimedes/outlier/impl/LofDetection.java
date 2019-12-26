@@ -41,7 +41,7 @@ public class LofDetection implements OutlierDetection {
             outlierIndexList.add(new Integer(dataNodeList.get(i).getNodeName()));
         }
 
-        detectionResult.setTimeSeriesMapList(timeSeriesMapList);
+        detectionResult.setDataMapList(timeSeriesMapList);
         detectionResult.setOutlierIndexList(outlierIndexList);
         return detectionResult;
     }

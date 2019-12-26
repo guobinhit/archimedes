@@ -58,7 +58,7 @@ public class Sigma3OutlierDetection implements OutlierDetection {
             }
         }
 
-        detectionResult.setTimeSeriesMapList(timeSeriesMapList);
+        detectionResult.setDataMapList(timeSeriesMapList);
         detectionResult.setOutlierIndexList(outlierIndexList);
         return detectionResult;
     }

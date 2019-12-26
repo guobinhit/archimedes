@@ -4,7 +4,7 @@ package com.hit.cggb.archimedes.enumtype;
  * @author Charies Gavin
  * @github https:github.com/guobinhit
  * @date 2019/12/26,下午3:31
- * @description
+ * @description 时间类型枚举
  */
 public enum CalendarTypeEnum {
     YEAR("年", 1),
