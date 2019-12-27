@@ -1,7 +1,6 @@
 package com.hit.cggb.archimedes.util;
 
 import com.hit.cggb.archimedes.enumtype.OrderTypeEnum;
-import com.hit.cggb.archimedes.enumtype.OutlierDetectionTypeEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

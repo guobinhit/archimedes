@@ -1,5 +1,8 @@
 package com.hit.cggb.archimedes.entity;
 
+import com.hit.cggb.archimedes.enumtype.AlgorithmTypeEnum;
+import com.hit.cggb.archimedes.enumtype.OrderTypeEnum;
+
 import java.util.List;
 import java.util.Map;
 
@@ -11,27 +14,27 @@ import java.util.Map;
  */
 public class OutlierDetectionParam {
 
-    // 算法类型
-    private String algorithmType;
-    // 排序类型
-    private String orderType;
-    // 数据列表
+    // 算法类型，必传参数
+    private AlgorithmTypeEnum algorithmType;
+    // 排序类型，可选参数
+    private OrderTypeEnum orderType;
+    // 数据列表，必传参数
     private List<Map<String, Object>> dataMapList;
 
-    public String getAlgorithmType() {
+    public AlgorithmTypeEnum getAlgorithmType() {
         return algorithmType;
     }
 
-    public String getOrderType() {
+    public void setAlgorithmType(AlgorithmTypeEnum algorithmType) {
+        this.algorithmType = algorithmType;
+    }
+
+    public OrderTypeEnum getOrderType() {
         return orderType;
     }
 
-    public void setOrderType(String orderType) {
+    public void setOrderType(OrderTypeEnum orderType) {
         this.orderType = orderType;
-    }
-
-    public void setAlgorithmType(String algorithmType) {
-        this.algorithmType = algorithmType;
     }
 
     public List<Map<String, Object>> getDataMapList() {
