@@ -1,12 +1,11 @@
 package com.hit.cggb.archimedes.util;
 
+import com.hit.cggb.archimedes.enumtype.OrderTypeEnum;
+import com.hit.cggb.archimedes.enumtype.OutlierDetectionTypeEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Charies Gavin
@@ -53,9 +52,9 @@ public class SortHelper<T> {
      *
      * @param aListOfMapDate 待排序列表
      */
-    public List<Map<String, Object>> sortListByMapDate(List<Map<String, Object>> aListOfMapDate) {
+    public List<Map<String, Object>> sortListByMapDate(List<Map<String, Object>> aListOfMapDate, OrderTypeEnum orderType) {
         List<Map<String, Object>> sortedList = new ArrayList<>();
-        try {
+        if (OrderTypeEnum.ASC.equals(orderType)) {
             for (int i = aListOfMapDate.size() - 1; i >= 0; i--) {
                 for (int j = 0; j < i; j++) {
                     Date earlyDate = ThreadSafeDateUtil.parseDateTimeMillisecond((String) aListOfMapDate.get(j).get("date"));
@@ -68,8 +67,21 @@ public class SortHelper<T> {
                 }
                 sortedList.add(aListOfMapDate.get(i));
             }
-        } catch (Throwable e) {
-            logger.error("sort list by map date come across a error, message is " + e);
+        } else if (OrderTypeEnum.DESC.equals(orderType)) {
+            for (int i = aListOfMapDate.size() - 1; i >= 0; i--) {
+                for (int j = 0; j < i; j++) {
+                    Date earlyDate = ThreadSafeDateUtil.parseDateTimeMillisecond((String) aListOfMapDate.get(j).get("date"));
+                    Date lateDate = ThreadSafeDateUtil.parseDateTimeMillisecond((String) aListOfMapDate.get(j + 1).get("date"));
+                    if (earlyDate.getTime() >= lateDate.getTime()) {
+                        Map<String, Object> tempMap = aListOfMapDate.get(j + 1);
+                        aListOfMapDate.set(j + 1, aListOfMapDate.get(j));
+                        aListOfMapDate.set(j, tempMap);
+                    }
+                }
+                sortedList.add(aListOfMapDate.get(i));
+            }
+        } else {
+            throw new IllegalArgumentException("meet unknown order type of " + orderType);
         }
         return sortedList;
     }

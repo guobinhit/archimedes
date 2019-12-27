@@ -13,11 +13,21 @@ public class OutlierDetectionParam {
 
     // 算法类型
     private String algorithmType;
+    // 排序类型
+    private String orderType;
     // 数据列表
     private List<Map<String, Object>> dataMapList;
 
     public String getAlgorithmType() {
         return algorithmType;
+    }
+
+    public String getOrderType() {
+        return orderType;
+    }
+
+    public void setOrderType(String orderType) {
+        this.orderType = orderType;
     }
 
     public void setAlgorithmType(String algorithmType) {

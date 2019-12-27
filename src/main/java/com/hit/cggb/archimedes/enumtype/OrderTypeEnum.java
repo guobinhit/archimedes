@@ -3,18 +3,14 @@ package com.hit.cggb.archimedes.enumtype;
 /**
  * @author Charies Gavin
  * @github https:github.com/guobinhit
- * @date 2019/12/26,下午3:10
- * @description 异常点探测算法枚举
+ * @date 2019/12/27,上午11:27
+ * @description 排序类型枚举
  */
-public enum OutlierDetectionTypeEnum {
-    QUARTILE("四分位"),
-    SIGMA3("3-SIGMA"),
-    ZSCORE("Z-SCORE"),
-    DBSCAN("DBSCAN"),
-    STCR("短期环比"),
-    LOF("LOF");
+public enum OrderTypeEnum {
+    ASC("升序"),
+    DESC("降序");
 
-    OutlierDetectionTypeEnum(String desc) {
+    OrderTypeEnum(String desc) {
         this.desc = desc;
     }
 

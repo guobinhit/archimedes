@@ -1,14 +1,10 @@
 package com.hit.cggb.archimedes.util;
 
 import com.hit.cggb.archimedes.enumtype.CalendarTypeEnum;
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -25,12 +21,12 @@ public class ThreadSafeDateUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(ThreadSafeDateUtil.class);
 
+    // 时间格式化字符串
     public static final String DATE_FORMAT = "yyyy-MM-dd";
     public static final String DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
     public static final String DATETIME_MILLISECOND_FORMAT = "yyyy-MM-dd HH:mm:ss.SSS";
     public static final String HOUR_MINUTE_FORMAT = "HH:mm";
-    public static final String ES_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS";
-    public static final DateTimeFormatter ES_TIME_FORMATTER = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
+    public static final String MONTH_DAY_FORMAT = "MM-dd";
 
     // 东八区
     private static final String CHINA_TIME_ZONE = "GMT+8:00";
@@ -38,18 +34,29 @@ public class ThreadSafeDateUtil {
     private static ThreadLocal<DateFormat> threadLocal = new ThreadLocal<DateFormat>();
     private static ThreadLocal<DateFormat> dateTime_threadLocal = new ThreadLocal<DateFormat>();
 
+    // 线程本地变量
+    private static ThreadLocal<DateFormat> THREAD_LOCAL = new ThreadLocal<DateFormat>();
+
+    /**
+     * 获取指定时间格式
+     *
+     * @param dateFormat 时间格式字符串
+     * @return DateFormat
+     */
+    public static DateFormat getPointedDateFormat(String dateFormat) {
+        DateFormat df = new SimpleDateFormat(dateFormat);
+        // 设置东八区时区
+        df.setTimeZone(TimeZone.getTimeZone(CHINA_TIME_ZONE));
+        return df;
+    }
+
     /**
      * 获取 yyyy-MM-dd 格式
      *
      * @return DateFormat
      */
     public static DateFormat getDateFormat() {
-        DateFormat df = threadLocal.get();
-        if (df == null) {
-            df = new SimpleDateFormat(DATE_FORMAT);
-            threadLocal.set(df);
-        }
-        return df;
+        return getPointedDateFormat(DATE_FORMAT);
     }
 
     /**
@@ -58,12 +65,7 @@ public class ThreadSafeDateUtil {
      * @return DateFormat
      */
     public static DateFormat getDateTimeFormat() {
-        DateFormat df = dateTime_threadLocal.get();
-        if (df == null) {
-            df = new SimpleDateFormat(DATETIME_FORMAT);
-            dateTime_threadLocal.set(df);
-        }
-        return df;
+        return getPointedDateFormat(DATETIME_FORMAT);
     }
 
     /**
@@ -72,12 +74,7 @@ public class ThreadSafeDateUtil {
      * @return DateFormat
      */
     public static DateFormat getDateTimeMillisecondFormat() {
-        DateFormat df = dateTime_threadLocal.get();
-        if (df == null) {
-            df = new SimpleDateFormat(DATETIME_MILLISECOND_FORMAT);
-            dateTime_threadLocal.set(df);
-        }
-        return df;
+        return getPointedDateFormat(DATETIME_MILLISECOND_FORMAT);
     }
 
     /**
@@ -86,16 +83,20 @@ public class ThreadSafeDateUtil {
      * @return DateFormat
      */
     public static DateFormat getHourMinuteFormat() {
-        DateFormat df = threadLocal.get();
-        if (df == null) {
-            df = new SimpleDateFormat(HOUR_MINUTE_FORMAT);
-            threadLocal.set(df);
-        }
-        return df;
+        return getPointedDateFormat(HOUR_MINUTE_FORMAT);
     }
 
     /**
-     * 日期转字符串，精确到天
+     * 获取 MM-dd 格式
+     *
+     * @return DateFormat
+     */
+    public static DateFormat getMonthDayFormat() {
+        return getPointedDateFormat(MONTH_DAY_FORMAT);
+    }
+
+    /**
+     * 将 Date 类型参数转为 yyyy-MM-dd 格式的字符串
      *
      * @param date
      * @return
@@ -105,7 +106,7 @@ public class ThreadSafeDateUtil {
     }
 
     /**
-     * 时间转字符串，精确到秒
+     * 将 Date 类型参数转为 yyyy-MM-dd HH:mm:ss 格式的字符串
      *
      * @param date
      * @return
@@ -115,7 +116,7 @@ public class ThreadSafeDateUtil {
     }
 
     /**
-     * 时间转字符串，精确到毫秒
+     * 将 Date 类型参数转为 yyyy-MM-dd HH:mm:ss.SSS 格式的字符串
      *
      * @param date
      * @return
@@ -125,7 +126,7 @@ public class ThreadSafeDateUtil {
     }
 
     /**
-     * 时间转字符串，格式为时分
+     * 将 Date 类型参数转为 HH:mm 格式的字符串
      *
      * @param date
      * @return
@@ -135,79 +136,163 @@ public class ThreadSafeDateUtil {
     }
 
     /**
-     * 字符串(精确到天)转成Date
+     * 将 Date 类型参数转为 MM-dd 格式的字符串
      *
-     * @param strDate
+     * @param date
      * @return
-     * @throws ParseException
      */
-    public static Date parseDate(String strDate) throws ParseException {
-        return getDateFormat().parse(strDate);
+    public static String formatMonthDay(Date date) {
+        return getMonthDayFormat().format(date);
     }
 
     /**
-     * 字符串(精确到秒)转成Date
+     * 将字符串类型的参数转为 yyyy-MM-dd 格式的 Date
      *
      * @param strDate
      * @return
-     * @throws ParseException
      */
-    public static Date parseDateTime(String strDate) throws ParseException {
-        return getDateTimeFormat().parse(strDate);
+    public static Date parseDate(String strDate) {
+        try {
+            return getDateFormat().parse(strDate);
+        } catch (Throwable e) {
+            logger.error("parse date string type to yyyy-MM-dd format failed, return null, error message is " + e);
+            return null;
+        }
     }
 
     /**
-     * 字符串(精确到毫秒)转成Date
+     * 将 Date 类型的参数转为 yyyy-MM-dd 格式的 Date
+     *
+     * @param date
+     * @return
+     */
+    public static Date parseDate(Date date) {
+        try {
+            return getDateFormat().parse(formatDate(date));
+        } catch (Throwable e) {
+            logger.error("parse date type to yyyy-MM-dd format failed, return null, error message is " + e);
+            return null;
+        }
+    }
+
+    /**
+     * 将字符串类型的参数转为 yyyy-MM-dd HH:mm:ss 格式的 Date
      *
      * @param strDate
      * @return
-     * @throws ParseException
+     */
+    public static Date parseDateTime(String strDate) {
+        try {
+            return getDateTimeFormat().parse(strDate);
+        } catch (Throwable e) {
+            logger.error("parse date string type to yyyy-MM-dd HH:mm:ss format failed, return null, error message is " + e);
+            return null;
+        }
+    }
+
+    /**
+     * 将 Date 类型的参数转为 yyyy-MM-dd HH:mm:ss 格式的 Date
+     *
+     * @param date
+     * @return
+     */
+    public static Date parseDateTime(Date date) {
+        try {
+            return getDateTimeFormat().parse(formatDateTime(date));
+        } catch (Throwable e) {
+            logger.error("parse date type to yyyy-MM-dd HH:mm:ss format failed, return null, error message is " + e);
+            return null;
+        }
+    }
+
+    /**
+     * 将字符串类型的参数转为 yyyy-MM-dd HH:mm:ss.SSS 格式的 Date
+     *
+     * @param strDate
+     * @return
      */
     public static Date parseDateTimeMillisecond(String strDate) {
         try {
             return getDateTimeMillisecondFormat().parse(strDate);
         } catch (Throwable e) {
-            logger.error("parse date to yyyy-MM-dd HH:mm:ss.SSS failed, return origin value " + strDate + ", error message is " + e);
-            return new Date();
+            logger.error("parse date string type to yyyy-MM-dd HH:mm:ss.SSS format failed, return null, error message is " + e);
+            return null;
         }
     }
 
     /**
-     * Date(精确到毫秒)转成Date
-     *
-     * @param data
-     * @return
-     * @throws ParseException
-     */
-    public static Date parseDateTimeMillisecond(Date data) {
-        try {
-            return getDateTimeMillisecondFormat().parse(formatDateTimeMillisecond(data));
-        } catch (Throwable e) {
-            logger.error("parse date to yyyy-MM-dd HH:mm:ss.SSS failed, return origin value " + data + ", error message is " + e);
-            return data;
-        }
-    }
-
-    /**
-     * Date(时分)转成Date
-     *
-     * @param strDate
-     * @return
-     * @throws ParseException
-     */
-    public static Date parseHourMinute(String strDate) throws ParseException {
-        return getHourMinuteFormat().parse(strDate);
-    }
-
-    /**
-     * 字符串(时分)转成Date
+     * 将 Date 类型的参数转为 yyyy-MM-dd HH:mm:ss.SSS 格式的 Date
      *
      * @param date
      * @return
-     * @throws ParseException
      */
-    public static Date parseHourMinute(Date date) throws ParseException {
-        return getHourMinuteFormat().parse(formatHourMinute(date));
+    public static Date parseDateTimeMillisecond(Date date) {
+        try {
+            return getDateTimeMillisecondFormat().parse(formatDateTimeMillisecond(date));
+        } catch (Throwable e) {
+            logger.error("parse date type to yyyy-MM-dd HH:mm:ss.SSS format failed, return null, error message is " + e);
+            return null;
+        }
+    }
+
+    /**
+     * 将字符串类型的参数转为 HH:mm 格式的 Date
+     *
+     * @param strDate
+     * @return
+     */
+    public static Date parseHourMinute(String strDate) {
+        try {
+            return getHourMinuteFormat().parse(strDate);
+        } catch (Throwable e) {
+            logger.error("parse date string type to HH:mm format failed, return null, error message is " + e);
+            return null;
+        }
+    }
+
+    /**
+     * 将 Date 类型的参数转为 HH:mm 格式的 Date
+     *
+     * @param date
+     * @return
+     */
+    public static Date parseHourMinute(Date date) {
+        try {
+            return getHourMinuteFormat().parse(formatHourMinute(date));
+        } catch (Throwable e) {
+            logger.error("parse date type to HH:mm format failed, return null, error message is " + e);
+            return null;
+        }
+    }
+
+    /**
+     * 将字符串类型的参数转为 MM-dd 格式的 Date
+     *
+     * @param strDate
+     * @return
+     */
+    public static Date parseMonthDay(String strDate) {
+        try {
+            return getMonthDayFormat().parse(strDate);
+        } catch (Throwable e) {
+            logger.error("parse date string type to HH:mm format failed, return null, error message is " + e);
+            return null;
+        }
+    }
+
+    /**
+     * 将 Date 类型的参数转为 MM-dd 格式的 Date
+     *
+     * @param date
+     * @return
+     */
+    public static Date parseMonthDay(Date date) {
+        try {
+            return getMonthDayFormat().parse(formatMonthDay(date));
+        } catch (Throwable e) {
+            logger.error("parse date type to HH:mm format failed, return null, error message is " + e);
+            return null;
+        }
     }
 
     /**
@@ -217,7 +302,7 @@ public class ThreadSafeDateUtil {
      * @return
      */
     public static Date getFetchDelayDate(Integer dateDelayMinutes) {
-        Calendar c = Calendar.getInstance();
+        Calendar c = Calendar.getInstance(Locale.CHINA);
         if (dateDelayMinutes > 0) {
             dateDelayMinutes = -dateDelayMinutes;
         }
@@ -233,13 +318,35 @@ public class ThreadSafeDateUtil {
      * @return
      */
     public static Date getFetchDelayDate(Date date, Integer dateDelayMinutes) {
-        Calendar c = Calendar.getInstance();
+        Calendar c = Calendar.getInstance(Locale.CHINA);
         c.setTime(date);
         if (dateDelayMinutes > 0) {
             dateDelayMinutes = -dateDelayMinutes;
         }
         c.add(Calendar.MINUTE, dateDelayMinutes);
         return c.getTime();
+    }
+
+    /**
+     * 获取指定日期的零点时间
+     *
+     * @param n 日期偏移量，0 表示当天时间；正数表示后移时间；负数表示前移时间
+     * @return 指定日期的零点时间，格式为 yyyy-MM-dd 00:00:00
+     */
+    public static Date getZeroOClockOfDate(int n) {
+        try {
+            Date date = new Date();
+            Calendar calendar = Calendar.getInstance(Locale.CHINA);
+            calendar.setTime(date);
+            calendar.add(Calendar.DATE, n);
+            date = calendar.getTime();
+            String startDateString = formatDate(date);
+            startDateString = startDateString + " 00:00:00";
+            return parseDateTime(startDateString);
+        } catch (Throwable e) {
+            logger.error("get { " + n + " days of today } zero O clock error, message is " + e);
+            return null;
+        }
     }
 
     /**
@@ -260,6 +367,42 @@ public class ThreadSafeDateUtil {
     public static Date getCurrentDate(Locale aLocale) {
         Calendar calendar = Calendar.getInstance(aLocale);
         return calendar.getTime();
+    }
+
+    /**
+     * 获取指定时区当前时间
+     *
+     * @param timeZone 时区字符串，例如 GMT+8:00
+     * @return 指定时区当前时间
+     */
+    public static Date getCurrentDate(String timeZone) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeZone(TimeZone.getTimeZone(timeZone));
+        return calendar.getTime();
+    }
+
+    /**
+     * 如果当前时分在参数时分之前，则返回 true
+     * 如果当前时分在参数时分之后，则返回 false
+     * <p>
+     * 例如当前时分是 12:12，如果参数时分是 11:11，则返回 true；如果参数时分是 13:13，则返回 false
+     *
+     * @param targetDate    目标时间
+     * @param hourMinuteStr 待比较时分为字符串，格式为 HH:mm
+     * @return true or false
+     */
+    public static boolean compareHourMinute(Date targetDate, String hourMinuteStr) {
+        try {
+            // 获取目标时间的时分
+            Date targetHourMinute = parseHourMinute(targetDate);
+            // 解析待比较参数的时分
+            Date paramHourMinute = parseHourMinute(hourMinuteStr);
+
+            return targetHourMinute.before(paramHourMinute);
+        } catch (Throwable e) {
+            logger.error("compareWithCurrentHourMinute come across a error, return default value false, message is " + e);
+            return false;
+        }
     }
 
     /**
@@ -293,8 +436,7 @@ public class ThreadSafeDateUtil {
             } else if (CalendarTypeEnum.MILLISECOND.equals(calendarType)) {
                 calendar.add(Calendar.MILLISECOND, n);
             } else {
-                logger.error("meet unknown CalendarTypeEnum of " + calendarType);
-                return null;
+                throw new IllegalArgumentException("meet unknown CalendarTypeEnum of " + calendarType);
             }
 
             // 获取偏移时间
@@ -311,57 +453,17 @@ public class ThreadSafeDateUtil {
         }
     }
 
-    /**
-     * 获取指定时间格式
-     *
-     * @param dateFormat 时间格式字符串
-     * @return DateFormat
-     */
-    public static DateFormat getPointedDateFormat(String dateFormat) {
-        DateFormat df = new SimpleDateFormat(dateFormat);
-        // 设置东八区时区
-        df.setTimeZone(TimeZone.getTimeZone(CHINA_TIME_ZONE));
-        return df;
-    }
-
-    /**
-     * 将 Elasticsearch 时间转为 Java 时间
-     *
-     * @param time ES 格式时间
-     * @return Java 格式时间
-     */
-    public static long convertEsTime2JavaTime(String time) {
-        DateTime timestamp = ES_TIME_FORMATTER.parseDateTime(time);
-        DateTime dateTime = timestamp.plusHours(8);
-        return dateTime.getMillis();
-    }
-
-    /**
-     * 将 Java 时间转为 Elasticsearch 时间
-     *
-     * @param time Java 格式时间
-     * @return ES 格式时间
-     */
-    public static String convertJavaTime2EsTime(String time) {
-        try {
-            Date date = getDeviationTime(
-                    parseDateTime(time),
-                    CalendarTypeEnum.HOUR,
-                    DATETIME_FORMAT,
-                    -8);
-
-            String dateStr = formatDateTime(date);
-            String[] dateStrArray = dateStr.split(" ");
-            return dateStrArray[0] + "T" + dateStrArray[1];
-        } catch (Throwable e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public static void main(String[] args) throws Exception {
-        Date date = new Date();
-        System.out.println(date);
-        Date date1 = parseDateTimeMillisecond(date);
-        System.out.println(date1);
+        Date date = parseDateTime(new Date());
+        System.out.println(formatDateTime(date));
+
+        Date dive = getDeviationTime(date, CalendarTypeEnum.DATE, DATETIME_FORMAT, -3);
+        System.out.println(formatDateTime(dive));
+
+        System.out.println(formatMonthDay(new Date()));
+
+        System.out.println(getZeroOClockOfDate(0));
+        System.out.println(getZeroOClockOfDate(1));
+        System.out.println(getZeroOClockOfDate(-1));
     }
 }
