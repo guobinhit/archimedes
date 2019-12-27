@@ -8,8 +8,8 @@ import java.util.Map;
 /**
  * @author Charies Gavin
  * @github https:github.com/guobinhit
- * @date 2019/12/26,下午3:06
- * @description
+ * @date 2019/12/25,下午3:06
+ * @description 异常点探索接口
  */
 public interface OutlierDetection {
     /**

@@ -11,7 +11,7 @@ import java.util.Map;
 /**
  * @author Charies Gavin
  * @github https:github.com/guobinhit
- * @date 11/20/19,2:55 PM
+ * @date 2019/12/26,下午2:55
  * @description Z分数异常点探测算法
  */
 public class ZscoreOutlierDetection implements OutlierDetection {

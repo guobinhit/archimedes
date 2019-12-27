@@ -9,12 +9,16 @@ import com.hit.cggb.archimedes.outlier.impl.*;
 import com.hit.cggb.archimedes.util.SortHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
 
-@Service
+/**
+ * @author Charies Gavin
+ * @github https:github.com/guobinhit
+ * @date 2019/12/27,上午11:20
+ * @description 异常点探测服务类
+ */
 public class OutlierDetectionService {
     private static Logger logger = LoggerFactory.getLogger(OutlierDetectionService.class);
 
@@ -22,10 +26,9 @@ public class OutlierDetectionService {
         logger.info("outlier detection query param is " + detectionParam.toString());
         OutlierDetectionResult detectionResult = new OutlierDetectionResult();
         // 获取目标时间序列
-//        List<Map<String, Object>> timeSeriesMapList = elasticsearchUtil.getTimeSeriesFromEsIndex(detectionParam);
+        List<Map<String, Object>> dataMapList = detectionParam.getDataMapList();
         // 按时间从早到晚排序
-//        List<Map<String, Object>> ascTimeSeriesMapList = new SortHelper<>().sortListByMapDate(timeSeriesMapList);
-        List<Map<String, Object>> ascTimeSeriesMapList = null;
+        List<Map<String, Object>> ascTimeSeriesMapList = new SortHelper<>().sortListByMapDate(dataMapList);
         // 对数据集进行校验，并根据算法类型实例化异常点探测类
         if (ascTimeSeriesMapList != null && ascTimeSeriesMapList.size() > 0) {
             // 获取异常点探测实例

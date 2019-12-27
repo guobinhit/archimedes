@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * @author Charies Gavin
  * @github https:github.com/guobinhit
- * @date 12/16/19,11:20 AM
+ * @date 2019/12/26,上午11:20
  * @description DBSCAN 异常点探测算法
  */
 public class DbscanDetection implements OutlierDetection {

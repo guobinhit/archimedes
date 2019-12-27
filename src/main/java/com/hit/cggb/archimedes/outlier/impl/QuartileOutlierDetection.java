@@ -11,7 +11,7 @@ import java.util.Map;
 /**
  * @author Charies Gavin
  * @github https:github.com/guobinhit
- * @date 11/18/19,6:03 PM
+ * @date 2019/12/26,下午6:03
  * @description 四分位异常点探测算法
  */
 public class QuartileOutlierDetection implements OutlierDetection {

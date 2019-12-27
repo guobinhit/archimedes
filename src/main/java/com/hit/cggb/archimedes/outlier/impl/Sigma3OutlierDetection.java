@@ -11,7 +11,7 @@ import java.util.Map;
 /**
  * @author Charies Gavin
  * @github https:github.com/guobinhit
- * @date 11/18/19,6:34 PM
+ * @date 2019/12/26,下午6:34
  * @description 3σ异常点探测算法
  */
 public class Sigma3OutlierDetection implements OutlierDetection {

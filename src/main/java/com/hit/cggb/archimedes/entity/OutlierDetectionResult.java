@@ -7,7 +7,7 @@ import java.util.Map;
  * @author Charies Gavin
  * @github https:github.com/guobinhit
  * @date 2019/12/26,下午3:08
- * @description 异常点探测
+ * @description 异常点探测结果
  */
 public class OutlierDetectionResult {
     // 原始数据列表

@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * @author Charies Gavin
  * @github https:github.com/guobinhit
- * @date 12/16/19,3:29 PM
+ * @date 2019/12/26,下午3:29
  * @description 短期环比异常点检查算法
  */
 public class StcrDetection implements OutlierDetection {
