@@ -15,8 +15,8 @@ public interface OutlierDetection {
     /**
      * 异常点探测方法
      *
-     * @param timeSeriesMapList 数据列表
+     * @param dataMapList 数据列表
      * @return 探测结果
      */
-    OutlierDetectionResult detect(List<Map<String, Object>> timeSeriesMapList);
+    OutlierDetectionResult detect(List<Map<String, Object>> dataMapList);
 }

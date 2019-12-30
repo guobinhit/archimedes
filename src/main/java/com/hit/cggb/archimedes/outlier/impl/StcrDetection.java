@@ -15,15 +15,15 @@ import java.util.Map;
  */
 public class StcrDetection implements OutlierDetection {
     @Override
-    public OutlierDetectionResult detect(List<Map<String, Object>> timeSeriesMapList) {
+    public OutlierDetectionResult detect(List<Map<String, Object>> dataMapList) {
         // 初始化返回参数
         OutlierDetectionResult detectionResult = new OutlierDetectionResult();
         List<Integer> outlierIndexList = new ArrayList<>();
 
         // 将数据存入数组以便计算
-        double[] timeSeries = new double[timeSeriesMapList.size()];
-        for (int i = 0; i < timeSeriesMapList.size(); i++) {
-            timeSeries[i] = (Double) timeSeriesMapList.get(i).get("value");
+        double[] dataArray = new double[dataMapList.size()];
+        for (int i = 0; i < dataMapList.size(); i++) {
+            dataArray[i] = (Double) dataMapList.get(i).get("value");
         }
 
         // 初始化阈值百分比、阈值窗口以及阈值数量
@@ -32,12 +32,12 @@ public class StcrDetection implements OutlierDetection {
         int thresholdCount = 4;
 
         // 当数据量大于阈值窗口时进行处理
-        if (timeSeries.length > thresholdWindow) {
+        if (dataArray.length > thresholdWindow) {
             // 校验异常点
-            for (int i = thresholdWindow; i < timeSeries.length; i++) {
+            for (int i = thresholdWindow; i < dataArray.length; i++) {
                 int issueCount = 0;
                 for (int k = 1, j = i - k; k < thresholdWindow; k++) {
-                    if ((Math.abs(timeSeries[i] - timeSeries[j]) / timeSeries[j]) > thresholdPercent) {
+                    if ((Math.abs(dataArray[i] - dataArray[j]) / dataArray[j]) > thresholdPercent) {
                         issueCount++;
                     }
                 }
@@ -47,7 +47,7 @@ public class StcrDetection implements OutlierDetection {
             }
         }
 
-        detectionResult.setDataMapList(timeSeriesMapList);
+        detectionResult.setDataMapList(dataMapList);
         detectionResult.setOutlierIndexList(outlierIndexList);
         return detectionResult;
     }

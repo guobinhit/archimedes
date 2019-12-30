@@ -11,7 +11,6 @@ import com.hit.cggb.archimedes.util.SortHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -44,17 +43,17 @@ public class OutlierDetectionService {
         List<Map<String, Object>> dataMapList = detectionParam.getDataMapList();
 
         // 处理日期排序参数
-        List<Map<String, Object>> orderDateMapList;
+        List<Map<String, Object>> orderDataMapList;
         if (OrderTypeEnum.ASC.equals(detectionParam.getOrderType())) {
-            orderDateMapList = new SortHelper<>().sortListByMapDate(dataMapList, OrderTypeEnum.ASC);
+            orderDataMapList = new SortHelper<>().sortListByMapDate(dataMapList, OrderTypeEnum.ASC);
         } else if (OrderTypeEnum.DESC.equals(detectionParam.getOrderType())) {
-            orderDateMapList = new SortHelper<>().sortListByMapDate(dataMapList, OrderTypeEnum.DESC);
+            orderDataMapList = new SortHelper<>().sortListByMapDate(dataMapList, OrderTypeEnum.DESC);
         } else {
-            orderDateMapList = dataMapList;
+            orderDataMapList = dataMapList;
         }
 
         // 对数据集进行校验，并根据算法类型实例化异常点探测类
-        if (orderDateMapList != null && orderDateMapList.size() > 0) {
+        if (orderDataMapList != null && orderDataMapList.size() > 0) {
             // 获取异常点探测实例
             OutlierDetection outlierDetection;
             if (AlgorithmTypeEnum.QUARTILE.equals(detectionParam.getAlgorithmType())) {
@@ -73,7 +72,7 @@ public class OutlierDetectionService {
                 throw new IllegalArgumentException(detectionParam.getAlgorithmType() + " is not support now");
             }
             // 探测异常点
-            detectionResult = outlierDetection.detect(orderDateMapList);
+            detectionResult = outlierDetection.detect(orderDataMapList);
         }
         return detectionResult;
     }

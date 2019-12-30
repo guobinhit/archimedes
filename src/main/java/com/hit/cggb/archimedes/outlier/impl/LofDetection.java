@@ -16,21 +16,21 @@ import java.util.Map;
  */
 public class LofDetection implements OutlierDetection {
     @Override
-    public OutlierDetectionResult detect(List<Map<String, Object>> timeSeriesMapList) {
+    public OutlierDetectionResult detect(List<Map<String, Object>> dataMapList) {
         // 初始化返回参数
         OutlierDetectionResult detectionResult = new OutlierDetectionResult();
         List<Integer> outlierIndexList = new ArrayList<>();
 
         // 将数据存入数组以便计算
-        double[] timeSeries = new double[timeSeriesMapList.size()];
-        for (int i = 0; i < timeSeriesMapList.size(); i++) {
-            timeSeries[i] = (Double) timeSeriesMapList.get(i).get("value");
+        double[] dataArray = new double[dataMapList.size()];
+        for (int i = 0; i < dataMapList.size(); i++) {
+            dataArray[i] = (Double) dataMapList.get(i).get("value");
         }
 
         List<DataNode> dataNodeList = new ArrayList<>();
-        for (int i = 0; i < timeSeries.length; i++) {
+        for (int i = 0; i < dataArray.length; i++) {
             // 用索引作为数据节点的名称
-            dataNodeList.add(new DataNode(i + "", new double[]{timeSeries[i], 0}));
+            dataNodeList.add(new DataNode(i + "", new double[]{dataArray[i], 0}));
         }
 
         Lof lof = new Lof();
@@ -41,7 +41,7 @@ public class LofDetection implements OutlierDetection {
             outlierIndexList.add(new Integer(dataNodeList.get(i).getNodeName()));
         }
 
-        detectionResult.setDataMapList(timeSeriesMapList);
+        detectionResult.setDataMapList(dataMapList);
         detectionResult.setOutlierIndexList(outlierIndexList);
         return detectionResult;
     }

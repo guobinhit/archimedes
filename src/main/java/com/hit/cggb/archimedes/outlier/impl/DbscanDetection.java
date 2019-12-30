@@ -15,21 +15,21 @@ import java.util.Map;
  */
 public class DbscanDetection implements OutlierDetection {
     @Override
-    public OutlierDetectionResult detect(List<Map<String, Object>> timeSeriesMapList) {
+    public OutlierDetectionResult detect(List<Map<String, Object>> dateMapList) {
         // 初始化返回参数
         OutlierDetectionResult detectionResult = new OutlierDetectionResult();
         List<Integer> outlierIndexList = new ArrayList<>();
 
         // 将数据存入数组以便计算
-        double[] timeSeries = new double[timeSeriesMapList.size()];
-        for (int i = 0; i < timeSeriesMapList.size(); i++) {
-            timeSeries[i] = (Double) timeSeriesMapList.get(i).get("value");
+        double[] dataArray = new double[dateMapList.size()];
+        for (int i = 0; i < dateMapList.size(); i++) {
+            dataArray[i] = (Double) dateMapList.get(i).get("value");
         }
 
         // 将一维数据点转换为二位数据点，默认 y 维值均为 0
         List<Point> pointList = new ArrayList<>();
-        for (int i = 0; i < timeSeries.length; i++) {
-            pointList.add(new Point(timeSeries[i], 0, i));
+        for (int i = 0; i < dataArray.length; i++) {
+            pointList.add(new Point(dataArray[i], 0, i));
         }
 
         Dbscan dbscan = new Dbscan(5, 5);
@@ -41,7 +41,7 @@ public class DbscanDetection implements OutlierDetection {
             }
         }
 
-        detectionResult.setDataMapList(timeSeriesMapList);
+        detectionResult.setDataMapList(dateMapList);
         detectionResult.setOutlierIndexList(outlierIndexList);
         return detectionResult;
     }
