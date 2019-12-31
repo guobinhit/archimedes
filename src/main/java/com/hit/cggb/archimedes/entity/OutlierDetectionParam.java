@@ -1,7 +1,8 @@
 package com.hit.cggb.archimedes.entity;
 
-import com.hit.cggb.archimedes.enumtype.AlgorithmTypeEnum;
+import com.hit.cggb.archimedes.enumtype.DetectionAlgorithmTypeEnum;
 import com.hit.cggb.archimedes.enumtype.OrderTypeEnum;
+import com.sun.istack.internal.NotNull;
 
 import java.util.List;
 import java.util.Map;
@@ -13,20 +14,21 @@ import java.util.Map;
  * @description 异常点探测参数类
  */
 public class OutlierDetectionParam {
-
-    // 算法类型，必传参数
-    private AlgorithmTypeEnum algorithmType;
-    // 排序类型，可选参数
+    // 异常点探测算法类型，必填项
+    @NotNull
+    private DetectionAlgorithmTypeEnum detectionAlgorithmType;
+    // 排序类型，可选项
     private OrderTypeEnum orderType;
-    // 数据列表，必传参数
+    // 数据列表，必填项
+    @NotNull
     private List<Map<String, Object>> dataMapList;
 
-    public AlgorithmTypeEnum getAlgorithmType() {
-        return algorithmType;
+    public DetectionAlgorithmTypeEnum getDetectionAlgorithmType() {
+        return detectionAlgorithmType;
     }
 
-    public void setAlgorithmType(AlgorithmTypeEnum algorithmType) {
-        this.algorithmType = algorithmType;
+    public void setDetectionAlgorithmType(DetectionAlgorithmTypeEnum detectionAlgorithmType) {
+        this.detectionAlgorithmType = detectionAlgorithmType;
     }
 
     public OrderTypeEnum getOrderType() {

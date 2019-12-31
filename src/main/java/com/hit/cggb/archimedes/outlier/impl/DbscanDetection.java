@@ -48,10 +48,12 @@ public class DbscanDetection implements OutlierDetection {
 
 
     /**
-     * Dbscan 核心算法
+     * DBSCAN 类
      */
     private static class Dbscan {
+        // 检测半径
         private double radius;
+        // 最小点数
         private int minPts;
 
         public Dbscan(double radius, int minPts) {
@@ -59,22 +61,28 @@ public class DbscanDetection implements OutlierDetection {
             this.minPts = minPts;
         }
 
+        /**
+         * 核心算法
+         *
+         * @param points 数据点列表
+         */
         public void process(List<Point> points) {
             int size = points.size();
             int idx = 0;
             int cluster = 1;
             while (idx < size) {
-                Point p = points.get(idx++);
-                // choose an unvisited point
-                if (!p.isVisit()) {
-                    // set visited
-                    p.setVisit(true);
-                    List<Point> adjacentPoints = getAdjacentPoints(p, points);
-                    // set the point which adjacent points less than minPts noised
+                Point point = points.get(idx++);
+                // 处理未被访问过的点
+                if (!point.isVisit()) {
+                    // 设置访问标志
+                    point.setVisit(true);
+                    // 获取临近点列表
+                    List<Point> adjacentPoints = getAdjacentPoints(point, points);
+                    // 如果临近点列表的数量小于 minPts，则将其设置为噪音点
                     if (adjacentPoints.size() < minPts) {
-                        p.setNoised(true);
+                        point.setNoised(true);
                     } else {
-                        p.setCluster(cluster);
+                        point.setCluster(cluster);
                         for (int i = 0; i < adjacentPoints.size(); i++) {
                             Point adjacentPoint = adjacentPoints.get(i);
                             // only check unvisited point, cause only unvisited have the chance to add new adjacent points
@@ -115,11 +123,11 @@ public class DbscanDetection implements OutlierDetection {
          */
         private List<Point> getAdjacentPoints(Point centerPoint, List<Point> points) {
             List<Point> adjacentPoints = new ArrayList<>();
-            for (Point p : points) {
+            for (Point point : points) {
                 // 包括中心点自身
-                double distance = centerPoint.getDistance(p);
+                double distance = centerPoint.getDistance(point);
                 if (distance <= radius) {
-                    adjacentPoints.add(p);
+                    adjacentPoints.add(point);
                 }
             }
             return adjacentPoints;
@@ -127,7 +135,7 @@ public class DbscanDetection implements OutlierDetection {
     }
 
     /**
-     * 待处理点类
+     * 二维点类
      */
     private static class Point {
         private double x;

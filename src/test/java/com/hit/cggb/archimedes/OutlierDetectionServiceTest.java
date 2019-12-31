@@ -2,7 +2,7 @@ package com.hit.cggb.archimedes;
 
 import com.hit.cggb.archimedes.entity.OutlierDetectionParam;
 import com.hit.cggb.archimedes.entity.OutlierDetectionResult;
-import com.hit.cggb.archimedes.enumtype.AlgorithmTypeEnum;
+import com.hit.cggb.archimedes.enumtype.DetectionAlgorithmTypeEnum;
 import com.hit.cggb.archimedes.enumtype.OrderTypeEnum;
 import com.hit.cggb.archimedes.service.OutlierDetectionService;
 
@@ -23,7 +23,7 @@ public class OutlierDetectionServiceTest {
 
         // 组装参数
         OutlierDetectionParam odParam = new OutlierDetectionParam();
-        odParam.setAlgorithmType(AlgorithmTypeEnum.QUARTILE);
+        odParam.setAlgorithmType(DetectionAlgorithmTypeEnum.QUARTILE);
         odParam.setOrderType(OrderTypeEnum.DESC);
         odParam.setDataMapList(dataMapList);
 

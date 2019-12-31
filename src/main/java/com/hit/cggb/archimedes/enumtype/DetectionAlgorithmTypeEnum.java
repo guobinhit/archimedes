@@ -4,9 +4,9 @@ package com.hit.cggb.archimedes.enumtype;
  * @author Charies Gavin
  * @github https:github.com/guobinhit
  * @date 2019/12/26,下午3:10
- * @description 算法类型枚举
+ * @description 异常点探测算法类型枚举
  */
-public enum AlgorithmTypeEnum {
+public enum DetectionAlgorithmTypeEnum {
     QUARTILE("四分位"),
     SIGMA3("3-SIGMA"),
     ZSCORE("Z-SCORE"),
@@ -14,7 +14,7 @@ public enum AlgorithmTypeEnum {
     STCR("短期环比"),
     LOF("LOF");
 
-    AlgorithmTypeEnum(String desc) {
+    DetectionAlgorithmTypeEnum(String desc) {
         this.desc = desc;
     }
 

@@ -1,10 +1,9 @@
 package com.hit.cggb.archimedes.service;
 
-
 import com.hit.cggb.archimedes.entity.OutlierDetectionParam;
 import com.hit.cggb.archimedes.entity.OutlierDetectionResult;
 import com.hit.cggb.archimedes.enumtype.OrderTypeEnum;
-import com.hit.cggb.archimedes.enumtype.AlgorithmTypeEnum;
+import com.hit.cggb.archimedes.enumtype.DetectionAlgorithmTypeEnum;
 import com.hit.cggb.archimedes.outlier.OutlierDetection;
 import com.hit.cggb.archimedes.outlier.impl.*;
 import com.hit.cggb.archimedes.util.SortHelper;
@@ -27,26 +26,27 @@ public class OutlierDetectionService {
     /**
      * 异常点探测方法
      *
-     * @param detectionParam 探测参数
+     * @param outlierDetectionParam 探测参数
      * @return 探测结果
      */
-    public OutlierDetectionResult outlierDetect(OutlierDetectionParam detectionParam) {
+    public OutlierDetectionResult outlierDetect(OutlierDetectionParam outlierDetectionParam) {
         // 校验参数
-        if (detectionParam.getDataMapList() == null || detectionParam.getDataMapList().size() == 0) {
+        if (outlierDetectionParam.getDataMapList() == null
+                || outlierDetectionParam.getDataMapList().size() == 0) {
             throw new IllegalArgumentException("data set can not be null and size must be larger 0");
         }
 
-        logger.info("outlier detection query param is " + detectionParam.toString());
+        logger.info("outlier detection query param is " + outlierDetectionParam.toString());
 
         OutlierDetectionResult detectionResult = new OutlierDetectionResult();
         // 获取目标时间序列
-        List<Map<String, Object>> dataMapList = detectionParam.getDataMapList();
+        List<Map<String, Object>> dataMapList = outlierDetectionParam.getDataMapList();
 
         // 处理日期排序参数
         List<Map<String, Object>> orderDataMapList;
-        if (OrderTypeEnum.ASC.equals(detectionParam.getOrderType())) {
+        if (OrderTypeEnum.ASC.equals(outlierDetectionParam.getOrderType())) {
             orderDataMapList = new SortHelper<>().sortListByMapDate(dataMapList, OrderTypeEnum.ASC);
-        } else if (OrderTypeEnum.DESC.equals(detectionParam.getOrderType())) {
+        } else if (OrderTypeEnum.DESC.equals(outlierDetectionParam.getOrderType())) {
             orderDataMapList = new SortHelper<>().sortListByMapDate(dataMapList, OrderTypeEnum.DESC);
         } else {
             orderDataMapList = dataMapList;
@@ -56,20 +56,20 @@ public class OutlierDetectionService {
         if (orderDataMapList != null && orderDataMapList.size() > 0) {
             // 获取异常点探测实例
             OutlierDetection outlierDetection;
-            if (AlgorithmTypeEnum.QUARTILE.equals(detectionParam.getAlgorithmType())) {
+            if (DetectionAlgorithmTypeEnum.QUARTILE.equals(outlierDetectionParam.getDetectionAlgorithmType())) {
                 outlierDetection = new QuartileOutlierDetection();
-            } else if (AlgorithmTypeEnum.SIGMA3.equals(detectionParam.getAlgorithmType())) {
+            } else if (DetectionAlgorithmTypeEnum.SIGMA3.equals(outlierDetectionParam.getDetectionAlgorithmType())) {
                 outlierDetection = new Sigma3OutlierDetection();
-            } else if (AlgorithmTypeEnum.ZSCORE.equals(detectionParam.getAlgorithmType())) {
+            } else if (DetectionAlgorithmTypeEnum.ZSCORE.equals(outlierDetectionParam.getDetectionAlgorithmType())) {
                 outlierDetection = new ZscoreOutlierDetection();
-            } else if (AlgorithmTypeEnum.DBSCAN.equals(detectionParam.getAlgorithmType())) {
+            } else if (DetectionAlgorithmTypeEnum.DBSCAN.equals(outlierDetectionParam.getDetectionAlgorithmType())) {
                 outlierDetection = new DbscanDetection();
-            } else if (AlgorithmTypeEnum.LOF.equals(detectionParam.getAlgorithmType())) {
+            } else if (DetectionAlgorithmTypeEnum.LOF.equals(outlierDetectionParam.getDetectionAlgorithmType())) {
                 outlierDetection = new LofDetection();
-            } else if (AlgorithmTypeEnum.STCR.equals(detectionParam.getAlgorithmType())) {
+            } else if (DetectionAlgorithmTypeEnum.STCR.equals(outlierDetectionParam.getDetectionAlgorithmType())) {
                 outlierDetection = new StcrDetection();
             } else {
-                throw new IllegalArgumentException(detectionParam.getAlgorithmType() + " is not support now");
+                throw new IllegalArgumentException(outlierDetectionParam.getDetectionAlgorithmType().name() + " is not support now");
             }
             // 探测异常点
             detectionResult = outlierDetection.detect(orderDataMapList);
