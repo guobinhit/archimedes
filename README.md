@@ -14,6 +14,8 @@
   - [Z-SCORE](#Z-SCORE)
   - [QUARTILE](#QUARTILE)
 - [使用示例](#使用示例)
+  - [异常检测](#异常检测)
+  - [趋势预测](#趋势预测)
 
 ### 算法概述
 
@@ -43,6 +45,8 @@ QUARTILE 法，即四分位法，也称为箱型图，是指在统计学中把�
 
 ### 使用示例
 
+#### 异常检测
+
 首先，引入本项目 jar 包，创建`OutlierDetectionService`实例：
 
 ```java
@@ -51,7 +55,7 @@ OutlierDetectionService odService = new OutlierDetectionService();
 
 然后，调用`OutlierDetectionService`的`outlierDetect()`方法。当然，在调用`outlierDetect()`方法之前，我们需要先创建该方法的参数对象`OutlierDetectionParam`，该对象含有三个参数，分别为：
 
-- `algorithmType`，表示算法类型，为`AlgorithmTypeEnum`枚举类型，必填项；
+- `algorithmType`，表示算法类型，为`DetectionAlgorithmTypeEnum`枚举类型，必填项；
 - `orderType`，表示排序类型，为`OrderTypeEnum`枚举类型，用于对原始数据按时间排序，选填项；
 - `dataMapList`，表示数据集，即待处理的数据列表，非空且数量必须大于0，必填项。
 
@@ -62,7 +66,7 @@ List<Map<String, Object>> dataMapList = new ArrayList<>();
 // 组装参数
 OutlierDetectionParam odParam = new OutlierDetectionParam();
 // 使用四分位法
-odParam.setAlgorithmType(AlgorithmTypeEnum.QUARTILE);
+odParam.setAlgorithmType(DetectionAlgorithmTypeEnum.QUARTILE);
 // 将数据集按时间升序排序
 odParam.setOrderType(OrderTypeEnum.ASC);
 // 填充数据集
@@ -82,3 +86,7 @@ OutlierDetectionResult odResult = odService.outlierDetect(odParam);
 
 - `dataMapList`，表示数据集，如果没有传`orderType`参数，则为原数据集，否则为排序后的数据集；
 - `outlierIndexList`，表示异常点的索引列表，即异常点的位置。
+
+#### 趋势预测
+
+- 待完善

@@ -51,7 +51,7 @@ OutlierDetectionService odService = new OutlierDetectionService();
 
 Then，call the method `outlierDetect()` of `OutlierDetectionService`. Of course, before calling the `outlierDetect()` method, we need to create the parameter object `OutlierDetectionParam` of the method, which contains three parameters, namely:
 
-- `algorithmType`, represent algorithm type，it's `AlgorithmTypeEnum` enumeration type，`required`.
+- `algorithmType`, represent algorithm type，it's `DetectionAlgorithmTypeEnum` enumeration type，`required`.
 - `orderType`, represent order type，it's `OrderTypeEnum` enumeration type，used to sort raw data by time, `optional`.
 - `dataMapList`, represent data set, that is, the list of data to be processed, it's not empty and the quantity must be greater than 0, `required`.
 
@@ -62,7 +62,7 @@ List<Map<String, Object>> dataMapList = new ArrayList<>();
 // Assembly parameters
 OutlierDetectionParam odParam = new OutlierDetectionParam();
 // Using the quartile method
-odParam.setAlgorithmType(AlgorithmTypeEnum.QUARTILE);
+odParam.setAlgorithmType(DetectionAlgorithmTypeEnum.QUARTILE);
 // Sort datasets in ascending time order
 odParam.setOrderType(OrderTypeEnum.ASC);
 // Fill data set
